@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crash Game – GambleZone</title>
+  <style>
+    body {
+      background-color: #1d1d1d;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #ff6347;
+      font-size: 3rem;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .game-container {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .multiplier-display {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #00ffb3;
+      font-weight: bold;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .cashout-button {
+      padding: 15px 30px;
+      background-color: #00ffb3;
+      color: #111;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      transition: all 0.3s;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .cashout-button:hover {
+      background-color: #00d9a1;
+      transform: translateY(-2px);
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .status-message {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ff6347;
+    }
+
+    .game-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bet-button {
+      padding: 15px 25px;
+      background-color: #2ecc71;
+      color: #111;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .bet-button:hover {
+      background-color: #27ae60;
+      transform: translateY(-2px);
+      border-color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💣 Crash Game – GambleZone</h1>
+
+  <div class="game-container">
+    <div class="multiplier-display" id="multiplier">0.00x</div>
+    <div class="status-message" id="statusMessage">Place your bet and click "Start!"</div>
+  </div>
+
+  <div class="game-controls">
+    <button class="bet-button" onclick="startGame()">Start Game</button>
+    <button class="cashout-button" onclick="cashOut()" id="cashoutButton" disabled>Cash Out</button>
+  </div>
+
+  <script>
+    let currentMultiplier = 0;
+    let gameInterval;
+    let crashMultiplier;
+    let gameStarted = false;
+    let hasCashedOut = false;
+
+    // Function to start the game
+    function startGame() {
+      if (gameStarted) return;  // Prevent starting multiple games
+
+      // Reset values for new game
+      gameStarted = true;
+      hasCashedOut = false;
+      currentMultiplier = 0;
+      document.getElementById("multiplier").textContent = "0.00x";
+      document.getElementById("statusMessage").textContent = "Game is running, don't crash!";
+      document.getElementById("cashoutButton").disabled = false;
+
+      // Generate a random crash point (multiplier) between 1.5x and 10x
+      crashMultiplier = (Math.random() * 5).toFixed(2);
+      console.log("Crash multiplier is: " + crashMultiplier);  // For debugging purposes
+
+      // Start the multiplier growth
+      gameInterval = setInterval(() => {
+        if (hasCashedOut) return;  // Stop if the user has cashed out
+
+        currentMultiplier = (parseFloat(currentMultiplier) + 0.01).toFixed(2);
+        document.getElementById("multiplier").textContent = `${currentMultiplier}x`;
+
+        if (parseFloat(currentMultiplier) >= parseFloat(crashMultiplier)) {
+          // The game has crashed
+          clearInterval(gameInterval);
+          document.getElementById("statusMessage").textContent = `Game Over! Multiplier crashed at ${crashMultiplier}x!`;
+          document.getElementById("cashoutButton").disabled = true;
+          gameStarted = false;
+        }
+      }, 50);  // Increase the multiplier every 50ms
+    }
+
+    // Function to cash out
+    function cashOut() {
+      if (!gameStarted) return;
+
+      hasCashedOut = true;
+      clearInterval(gameInterval);
+      document.getElementById("statusMessage").textContent = `You cashed out at ${currentMultiplier}x!`;
+      document.getElementById("cashoutButton").disabled = true;
+      gameStarted = false;
+    }
+  </script>
+
+</body>
+</html>

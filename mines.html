@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mines Game – GambleZone</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #00ffb3;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 10px;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-color: #222;
+      border: 2px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: 0.2s ease;
+      font-size: 1.2rem;
+    }
+
+    .cell.safe {
+      background-color: #2ecc71;
+      animation: revealSafe 0.6s ease-out forwards;
+    }
+
+    .cell.mine {
+      background-color: #e74c3c;
+      animation: explodeMine 0.8s ease-out forwards;
+    }
+
+    @keyframes revealSafe {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes explodeMine {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+        background-color: #e74c3c;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 0.8;
+        background-color: #ff6347;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+        background-color: #e74c3c;
+      }
+    }
+
+    #status, #earnings, #highScore {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #00ffb3;
+      color: #111;
+      border: none;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background-color: #00d9a1;
+    }
+
+    #settings {
+      margin-top: 20px;
+      color: #fff;
+    }
+
+    label, input {
+      margin-right: 10px;
+    }
+
+    .earnings-animation {
+      animation: earningsFadeIn 1s ease-out forwards;
+    }
+
+    @keyframes earningsFadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>💣 Mines – GambleZone</h1>
+
+  <div id="settings">
+    <label for="mineCount">Number of Mines:</label>
+    <input type="number" id="mineCount" value="5" min="1" max="10">
+    <button onclick="initGame()">🔄 Start New Game</button>
+  </div>
+
+  <div class="grid" id="gameGrid"></div>
+
+  <div id="status"></div>
+  <div id="earnings" class="earnings-animation">💰 Total Earnings: $0</div>
+  <div id="highScore">🏆 High Score: $0</div>
+
+  <div class="buttons">
+    <button id="cashOutBtn" onclick="cashOut()">💸 Cash Out</button>
+    <button id="resetBtn" onclick="initGame()">🔄 Reset Game</button>
+  </div>
+
+  <script>
+    const gridSize = 5;
+    let mines = [];
+    let gameOver = false;
+    let safeRevealed = 0;
+    let earnings = 0;
+    let highScore = localStorage.getItem('highScore') || 0;
+    let multiplier = 1;
+
+    // Initialize game
+    function initGame() {
+      const mineCount = parseInt(document.getElementById("mineCount").value);
+      const grid = document.getElementById("gameGrid");
+      const status = document.getElementById("status");
+      grid.innerHTML = "";
+      mines = [];
+      gameOver = false;
+      safeRevealed = 0;
+      multiplier = 1;
+      status.textContent = "";
+
+      // Generate unique mine positions
+      while (mines.length < mineCount) {
+        const pos = Math.floor(Math.random() * gridSize * gridSize);
+        if (!mines.includes(pos)) {
+          mines.push(pos);
+        }
+      }
+
+      // Create grid
+      for (let i = 0; i < gridSize * gridSize; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.dataset.index = i;
+        cell.onclick = () => revealCell(cell, i);
+        grid.appendChild(cell);
+      }
+
+      // Reset earnings display
+      document.getElementById("earnings").classList.remove('earnings-animation');
+      document.getElementById("earnings").textContent = `💰 Total Earnings: $${earnings}`;
+      document.getElementById("earnings").classList.add('earnings-animation');
+      document.getElementById("highScore").textContent = `🏆 High Score: $${highScore}`;
+    }
+
+    // Reveal the clicked cell
+    function revealCell(cell, index) {
+      if (gameOver || cell.classList.contains("safe")) return;
+
+      if (mines.includes(index)) {
+        cell.classList.add("mine");
+        document.getElementById("status").textContent = "💥 You hit a mine! Game over.";
+        revealAllMines();
+        gameOver = true;
+        checkHighScore();
+      } else {
+        cell.classList.add("safe");
+        safeRevealed++;
+        multiplier = 1 + (safeRevealed / 5);  // Increase multiplier as more safe tiles are revealed
+      }
+    }
+
+    // Reveal all mines at the end
+    function revealAllMines() {
+      document.querySelectorAll(".cell").forEach(cell => {
+        const i = parseInt(cell.dataset.index);
+        if (mines.includes(i)) {
+          cell.classList.add("mine");
+        }
+      });
+    }
+
+    // Cash out
+    function cashOut() {
+      if (gameOver) return;
+      gameOver = true;
+      earnings += (safeRevealed * multiplier);
+      document.getElementById("status").textContent = `💸 You cashed out with $${(safeRevealed * multiplier).toFixed(2)}!`;
+      document.getElementById("earnings").textContent = `💰 Total Earnings: $${earnings.toFixed(2)}`;
+      document.getElementById("earnings").classList.add('earnings-animation');
+      checkHighScore();
+    }
+
+    // Check if we have a new high score
+    function checkHighScore() {
+      if (earnings > highScore) {
+        highScore = earnings;
+        localStorage.setItem('highScore', highScore);  // Save high score to localStorage
+        document.getElementById("highScore").textContent = `🏆 High Score: $${highScore.toFixed(2)}`;
+      }
+    }
+
+    initGame();
+  </script>
+</body>
+</html>

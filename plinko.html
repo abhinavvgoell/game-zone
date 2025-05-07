@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plinko Game – GambleZone</title>
+  <style>
+    body {
+      background-color: #1d1d1d;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #00ffb3;
+      font-size: 3rem;
+      margin-bottom: 30px;
+    }
+
+    .plinko-container {
+      position: relative;
+      width: 600px;
+      height: 600px;
+      border: 2px solid #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      background-color: #333;
+    }
+
+    .peg {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #00ffb3;
+      border-radius: 50%;
+    }
+
+    .ball {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #ff6347;
+      border-radius: 50%;
+      transition: all 0.1s ease-in-out;
+    }
+
+    .slot {
+      position: absolute;
+      bottom: 0;
+      width: 40px;
+      height: 20px;
+      background-color: #00ffb3;
+      border-radius: 5px;
+      text-align: center;
+      line-height: 20px;
+      font-size: 1.5rem;
+      color: #111;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #00ffb3;
+      border: none;
+      color: #111;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #00d9a1;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Plinko Game – GambleZone</h1>
+
+  <div class="plinko-container" id="plinkoContainer">
+    <!-- Pegs and slots will be dynamically added via JavaScript -->
+  </div>
+
+  <button class="button" onclick="startGame()">Start Plinko</button>
+  <!-- Add this inside the <body>, below the button -->
+  <div id="resultBox" style="margin-top: 20px; font-size: 1.5rem; color: #00ffb3;"></div>
+
+
+  <script>
+    const container = document.getElementById('plinkoContainer');
+    const numRows = 5;
+    const numCols = 9;
+    const slotValues = [0, 10, 20, 30, 40, 50, 60, 70, 80]; // Values at the bottom of each slot
+
+    // Peg positions array
+    let pegs = [];
+
+    // Create the grid of pegs
+    function createPegs() {
+      const pegRadius = 10;
+      const verticalSpacing = 50;
+      const horizontalSpacing = 60;
+
+      for (let row = 0; row < numRows; row++) {
+        for (let col = 0; col < numCols; col++) {
+          const peg = {
+            x: col * horizontalSpacing + (row % 2 === 0 ? horizontalSpacing / 2 : 0),
+            y: row * verticalSpacing + pegRadius
+          };
+          pegs.push(peg);
+          const pegElement = document.createElement('div');
+          pegElement.classList.add('peg');
+          pegElement.style.top = `${peg.y}px`;
+          pegElement.style.left = `${peg.x}px`;
+          container.appendChild(pegElement);
+        }
+      }
+    }
+
+    // Create slots at the bottom of the container
+    function createSlots() {
+      const numSlots = slotValues.length;
+
+      for (let i = 0; i < numSlots; i++) {
+        const slot = document.createElement('div');
+        slot.classList.add('slot');
+        slot.style.left = `${i * (container.offsetWidth / numSlots)}px`;
+        slot.dataset.value = slotValues[i];
+        slot.textContent = slotValues[i];
+        container.appendChild(slot);
+      }
+    }
+
+    // Function to start the Plinko game
+    function startGame() {
+      const ball = document.createElement('div');
+      ball.classList.add('ball');
+      ball.style.top = '10px';
+      ball.style.left = `${Math.random() * (container.offsetWidth - 20)}px`; // Random horizontal position
+      container.appendChild(ball);
+
+      let velocityX = 0; // Horizontal velocity
+      let velocityY = 0.1; // Vertical velocity (gravity)
+      let currentX = ball.offsetLeft;
+      let currentY = ball.offsetTop;
+
+      let interval = setInterval(() => {
+        velocityY += 0.05; // Increase downward velocity due to gravity
+        currentY += velocityY; // Apply gravity to ball's Y position
+
+        // Simulate ball collisions with pegs
+        for (let peg of pegs) {
+          if (Math.abs(currentX - peg.x) < 10 && Math.abs(currentY - peg.y) < 10) {
+            // Ball hits a peg, change its direction
+            velocityX = Math.random() < 0.5 ? -1 : 1; // Randomly choose direction
+            velocityY *= -0.5; // Reverse vertical velocity (bounce)
+          }
+        }
+
+        // Move the ball left or right
+        currentX += velocityX;
+
+        // Keep the ball within the container boundaries
+        if (currentX < 0) currentX = 0;
+        if (currentX > container.offsetWidth - 20) currentX = container.offsetWidth - 20;
+
+        ball.style.left = `${currentX}px`;
+        ball.style.top = `${currentY}px`;
+
+        // Check if the ball has reached the bottom
+        if (currentY >= container.offsetHeight - 20) {
+          clearInterval(interval);
+
+          // Find which slot the ball landed in
+          const slots = document.querySelectorAll('.slot');
+          let landedInSlot = null;
+          slots.forEach(slot => {
+            const slotLeft = slot.offsetLeft;
+            const slotRight = slotLeft + slot.offsetWidth;
+
+            if (currentX >= slotLeft && currentX <= slotRight) {
+              landedInSlot = slot;
+            }
+          });
+
+          // Display the result
+          const resultBox = document.getElementById("resultBox");
+if (landedInSlot) {
+  resultBox.textContent = `🎯 Ball landed in slot with value: ${landedInSlot.dataset.value}`;
+} else {
+  resultBox.textContent = `❌ Ball missed all slots!`;
+}
+
+        }
+      }, 30); // Ball falls at a pace every 30ms
+    }
+
+    // Initialize the Plinko game
+    createPegs();
+    createSlots();
+  </script>
+
+</body>
+</html>

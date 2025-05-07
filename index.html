@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GambleZone Casino</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+
+    header {
+      background-color: #222;
+      padding: 10px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 40px;
+    }
+
+    header .left-nav {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      margin-left: 20px;
+    }
+
+    header .right-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .green-btn {
+      background-color: #70ff00;
+      color: #000;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 3px;
+      text-decoration: none;
+    }
+
+    nav {
+      background-color: #333;
+      padding: 10px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+    }
+
+    .dropdown {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #222;
+      border: 1px solid #444;
+      padding: 10px;
+      z-index: 10;
+      width: 150px;
+    }
+
+    .dropdown-content div {
+      padding: 5px;
+      border-bottom: 1px solid #333;
+    }
+
+    .dropdown-content div:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .game-section {
+      padding: 30px;
+    }
+
+    .game-section h2 {
+      border-bottom: 1px solid #444;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 30px;
+    }
+
+    .game-card {
+      background-color: #111;
+      border-radius: 6px;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid #333;
+      transition: transform 0.2s ease;
+    }
+
+    .game-card:hover {
+      transform: scale(1.03);
+      border-color: #00ffb3;
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .game-card-title {
+      padding: 12px;
+      font-size: 15px;
+    }
+
+    .search-bar {
+      background-color: #444;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 3px;
+      color: #fff;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="istockphoto-1220124949-612x612.jpg" alt="Logo" />
+      <div style="font-weight: bold; font-size: 18px;">GambleZone</div>
+    </div>
+    <div class="left-nav">
+      <div>DAILY FANTASY</div>
+      <div>SPORTSBOOK</div>
+      <div style="color: #70ff00;">CASINO</div>
+      <div>MARKETPLACE</div>
+    </div>
+    <div class="right-nav">
+      <div>Responsible Gaming</div>
+      <input class="search-bar" placeholder="Search..." />
+      <a class="green-btn">LOG IN</a>
+      <a class="green-btn">SIGN UP</a>
+    </div>
+  </header>
+
+  <nav>
+    <div class="nav-links">
+      <div>Games</div>
+      <div>Promotions</div>
+      <div>Leaderboards</div>
+      <div>Free Credits</div>
+      <div>VIP</div>
+      <div>How To Play</div>
+    </div>
+    <div class="dropdown">
+      ▼ All Games
+      <div class="dropdown-content">
+        <div>Mines</div>
+        <div>Roulette</div>
+        <div>Crash</div>
+        <div>Plinko</div>
+        <div>Blackjack</div>
+        <div>Dice</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="game-section">
+    <h2>ALL GAMES</h2>
+    <div class="game-grid">
+      <a href="mines.html" class="game-card">
+        <img src="mines.jpeg" />
+        <div class="game-card-title">Mines</div>
+      </a>
+      <a href="roulette.html" class="game-card">
+        <img src="roulette.jpg" />
+        <div class="game-card-title">Roulette</div>
+      </a>
+      <a href="crash.html" class="game-card">
+        <img src="crash.webp" />
+        <div class="game-card-title">Crash</div>
+      </a>
+      <a href="plinko.html" class="game-card">
+        <img src="plinko.jpeg" />
+        <div class="game-card-title">Plinko</div>
+      </a>
+      <div class="game-card">
+        <img src="dice.jpeg" />
+        <div class="game-card-title">Dice</div>
+      </div>
+      <div class="game-card">
+        <img src="blackjack.png" />
+        <div class="game-card-title">Blackjack</div>
+      </div>
+      <div class="game-card">
+        <img src="slots.jpeg" />
+        <div class="game-card-title">Slots</div>
+      </div>
+      <div class="game-card">
+        <img src="jackpot.png" />
+        <div class="game-card-title">Jackpot</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
