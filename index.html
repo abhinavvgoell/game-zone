@@ -2,234 +2,415 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GambleZone Casino</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GambleZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --primary-color: #8b5cf6; /* Purple */
+      --accent-color: #a78bfa; /* Light purple */
+      --dark-bg: #0c0414;
+      --dark-element: #18181b;
+      --light-text: #ffffff;
+      --highlight: #c4b5fd;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000;
-      color: #fff;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #0c0414;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><radialGradient id="rgrad" cx="50%" cy="50%" r="70%" fx="50%" fy="50%"><stop offset="0%" stop-color="%23300066" stop-opacity="0.8"/><stop offset="100%" stop-color="%23000000" stop-opacity="1"/></radialGradient></defs><rect x="0" y="0" width="400" height="400" fill="url(%23rgrad)"/></svg>');
+      background-size: cover;
+      color: var(--light-text);
+      overflow-x: hidden;
     }
 
     header {
-      background-color: #222;
-      padding: 10px 30px;
+      background: rgba(15, 3, 35, 0.8);
+      padding: 15px 40px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--primary-color);
     }
 
     .logo {
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .logo img {
-      height: 40px;
-    }
-
-    header .left-nav {
-      display: flex;
-      gap: 20px;
-      font-size: 14px;
-      margin-left: 20px;
-    }
-
-    header .right-nav {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .green-btn {
-      background-color: #70ff00;
-      color: #000;
+      color: var(--accent-color);
+      font-size: 24px;
       font-weight: bold;
-      padding: 8px 16px;
-      border-radius: 3px;
-      text-decoration: none;
+      text-shadow: 0 0 15px rgba(139, 92, 246, 0.7);
     }
 
-    nav {
-      background-color: #333;
-      padding: 10px 30px;
+    .nav-links {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 25px;
     }
 
-    nav .nav-links {
-      display: flex;
-      gap: 20px;
+    .nav-links a {
+      color: #aaa;
+      text-decoration: none;
       font-size: 14px;
+      transition: color 0.3s, text-shadow 0.3s;
+      font-weight: 600;
+      letter-spacing: 1px;
     }
 
-    .dropdown {
-      position: relative;
+    .nav-links a:hover {
+      color: var(--accent-color);
+      text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    }
+
+    .search-auth {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-auth input {
+      padding: 8px 15px;
+      border-radius: 50px;
+      border: 1px solid var(--primary-color);
+      outline: none;
+      background: rgba(30, 10, 60, 0.4);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .search-auth input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .search-auth button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 50px;
+      font-weight: bold;
       cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .login {
+      background: linear-gradient(145deg, #a78bfa, #7c3aed);
+      color: white;
+    }
+
+    .signup {
+      background: linear-gradient(145deg, #8b5cf6, #6d28d9);
+      color: white;
+    }
+
+    .search-auth button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
+    }
+
+    .all-games-dropdown {
+      position: relative;
+    }
+
+    .all-games-dropdown button {
+      background: rgba(30, 10, 60, 0.4);
+      border: 1px solid var(--primary-color);
+      color: #ccc;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 15px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+    }
+
+    .all-games-dropdown button:hover {
+      color: var(--accent-color);
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
     }
 
     .dropdown-content {
       display: none;
       position: absolute;
+      top: 40px;
       right: 0;
-      background-color: #222;
-      border: 1px solid #444;
-      padding: 10px;
-      z-index: 10;
-      width: 150px;
+      background-color: rgba(20, 5, 40, 0.9);
+      backdrop-filter: blur(10px);
+      min-width: 180px;
+      z-index: 999;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+      animation: fadeIn 0.2s ease-in-out;
+      border: 1px solid var(--primary-color);
+      overflow: hidden;
     }
 
-    .dropdown-content div {
-      padding: 5px;
-      border-bottom: 1px solid #333;
-    }
-
-    .dropdown-content div:last-child {
-      border-bottom: none;
-    }
-
-    .dropdown:hover .dropdown-content {
+    .dropdown-content a {
+      color: #eee;
+      padding: 12px 20px;
+      text-decoration: none;
       display: block;
+      transition: background 0.3s ease, color 0.3s ease;
+      font-weight: 500;
     }
 
-    .game-section {
-      padding: 30px;
+    .dropdown-content a:hover {
+      background-color: rgba(139, 92, 246, 0.3);
+      color: var(--highlight);
     }
 
-    .game-section h2 {
-      border-bottom: 1px solid #444;
-      padding-bottom: 10px;
-      margin-bottom: 20px;
+    main {
+      padding: 40px;
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
-    .game-grid {
+    h1 {
+      font-size: 32px;
+      margin-bottom: 30px;
+      color: var(--accent-color);
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+    }
+
+    .games-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 30px;
     }
 
     .game-card {
-      background-color: #111;
-      border-radius: 6px;
+      background: rgba(30, 10, 60, 0.4);
+      border-radius: 15px;
       overflow: hidden;
       text-align: center;
-      border: 1px solid #333;
-      transition: transform 0.2s ease;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      text-decoration: none;
+      position: relative;
     }
 
     .game-card:hover {
-      transform: scale(1.03);
-      border-color: #00ffb3;
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(139, 92, 246, 0.4);
+      border-color: var(--accent-color);
     }
 
     .game-card img {
       width: 100%;
-      height: 150px;
+      height: 180px;
       object-fit: cover;
+      transition: transform 0.5s;
     }
 
-    .game-card-title {
-      padding: 12px;
-      font-size: 15px;
+    .game-card:hover img {
+      transform: scale(1.05);
     }
 
-    .search-bar {
-      background-color: #444;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 3px;
-      color: #fff;
+    .game-card span {
+      display: block;
+      padding: 15px;
+      font-size: 18px;
+      background: rgba(15, 3, 35, 0.8);
+      color: white;
+      font-weight: 600;
+      border-top: 1px solid rgba(139, 92, 246, 0.3);
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
+    /* Background elements */
+    .bg-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    
+    .bg-element {
+      position: absolute;
+      opacity: 0.1;
+      filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8));
+      animation: float 15s infinite ease-in-out;
+    }
+    
+    .bg-dice {
+      width: 80px;
+      height: 80px;
+      background-color: white;
+      border-radius: 12px;
+      top: 15%;
+      left: 10%;
+      transform: rotate(15deg);
+      animation-delay: 1s;
+    }
+    
+    .bg-chip {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 5px solid #8b5cf6;
+      background: linear-gradient(145deg, #a78bfa, #7c3aed);
+      top: 70%;
+      right: 15%;
+      animation-delay: 3s;
+    }
+    
+    .bg-card {
+      width: 70px;
+      height: 100px;
+      background-color: white;
+      border-radius: 8px;
+      top: 30%;
+      right: 10%;
+      transform: rotate(-10deg);
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0); }
+      50% { transform: translateY(-30px) rotate(5deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media screen and (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .search-auth {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
     }
   </style>
 </head>
 <body>
+  <div class="bg-elements">
+    <div class="bg-element bg-dice"></div>
+    <div class="bg-element bg-chip"></div>
+    <div class="bg-element bg-card"></div>
+  </div>
 
   <header>
     <div class="logo">
-      <img src="istockphoto-1220124949-612x612.jpg" alt="Logo" />
-      <div style="font-weight: bold; font-size: 18px;">GambleZone</div>
+      <img src="istockphoto-1220124949-612x612 (1).jpg" width="30" height="30" alt="logo" />
+      GambleZone
     </div>
-    <div class="left-nav">
-      <div>DAILY FANTASY</div>
-      <div>SPORTSBOOK</div>
-      <div style="color: #70ff00;">CASINO</div>
-      <div>MARKETPLACE</div>
+    <div class="nav-links">
+      <a href="#">DAILY FANTASY</a>
+      <a href="#">SPORTSBOOK</a>
+      <a href="#">CASINO</a>
+      <a href="#">MARKETPLACE</a>
     </div>
-    <div class="right-nav">
-      <div>Responsible Gaming</div>
-      <input class="search-bar" placeholder="Search..." />
-      <a class="green-btn">LOG IN</a>
-      <a class="green-btn">SIGN UP</a>
+    <div class="search-auth">
+      <input type="text" placeholder="Search..." />
+      <button class="login">LOG IN</button>
+      <button class="signup">SIGN UP</button>
+      <div class="all-games-dropdown">
+        <button id="dropdownBtn">All Games ▼</button>
+        <div id="dropdownMenu" class="dropdown-content">
+          <a href="mines.html">Mines</a>
+          <a href="roulette.html">Roulette</a>
+          <a href="crash.html">Crash</a>
+          <a href="plinko.html">Plinko</a>
+          <a href="#">Dice</a>
+          <a href="#">Blackjack</a>
+          <a href="#">Slots</a>
+          <a href="#">Jackpot</a>
+        </div>
+      </div>
     </div>
   </header>
 
-  <nav>
-    <div class="nav-links">
-      <div>Games</div>
-      <div>Promotions</div>
-      <div>Leaderboards</div>
-      <div>Free Credits</div>
-      <div>VIP</div>
-      <div>How To Play</div>
-    </div>
-    <div class="dropdown">
-      ▼ All Games
-      <div class="dropdown-content">
-        <div>Mines</div>
-        <div>Roulette</div>
-        <div>Crash</div>
-        <div>Plinko</div>
-        <div>Blackjack</div>
-        <div>Dice</div>
-      </div>
-    </div>
-  </nav>
-
-  <div class="game-section">
-    <h2>ALL GAMES</h2>
-    <div class="game-grid">
+  <main>
+    <h1>ALL GAMES</h1>
+    <div class="games-grid">
       <a href="mines.html" class="game-card">
-        <img src="mines.jpeg" />
-        <div class="game-card-title">Mines</div>
+        <img src="https://img.icons8.com/fluency/256/minesweeper.png" alt="Mines" />
+        <span>Mines</span>
       </a>
-      <a href="roulette.html" class="game-card">
-        <img src="roulette.jpg" />
-        <div class="game-card-title">Roulette</div>
+      <a class="game-card" href="roulette.html">
+        <img src="https://img.icons8.com/color/256/roulette.png" alt="Roulette" />
+        <span>Roulette</span>
       </a>
-      <a href="crash.html" class="game-card">
-        <img src="crash.webp" />
-        <div class="game-card-title">Crash</div>
+      <a class="game-card" href="crash.html">
+        <img src="crash.webp" alt="Crash" />
+        <span>Crash</span>
       </a>
-      <a href="plinko.html" class="game-card">
-        <img src="plinko.jpeg" />
-        <div class="game-card-title">Plinko</div>
+      <a class="game-card" href="plinko.html">
+        <img src="plinko.jpeg" alt="Plinko" />
+        <span>Plinko</span>
       </a>
-      <div class="game-card">
-        <img src="dice.jpeg" />
-        <div class="game-card-title">Dice</div>
-      </div>
-      <div class="game-card">
-        <img src="blackjack.png" />
-        <div class="game-card-title">Blackjack</div>
-      </div>
-      <div class="game-card">
-        <img src="slots.jpeg" />
-        <div class="game-card-title">Slots</div>
-      </div>
-      <div class="game-card">
-        <img src="jackpot.png" />
-        <div class="game-card-title">Jackpot</div>
-      </div>
+      <a class="game-card" href="#">
+        <img src="https://img.icons8.com/color/256/dice.png" alt="Dice" />
+        <span>Dice</span>
+      </a>
+      <a class="game-card" href="#">
+        <img src="blackjack.png" alt="Blackjack" />
+        <span>Blackjack</span>
+      </a>
+      <a class="game-card" href="#">
+        <img src="https://img.icons8.com/color/256/slot-machine.png" alt="Slots" />
+        <span>Slots</span>
+      </a>
+      <a class="game-card" href="#">
+        <img src="https://img.icons8.com/color/256/money-bag.png" alt="Jackpot" />
+        <span>Jackpot</span>
+      </a>
     </div>
-  </div>
+  </main>
+
+  <script>
+    const dropdownBtn = document.getElementById("dropdownBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    dropdownBtn.addEventListener("click", () => {
+      dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+    });
+
+    window.addEventListener("click", function (e) {
+      if (!dropdownBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.style.display = "none";
+      }
+    });
+  </script>
 
 </body>
 </html>
